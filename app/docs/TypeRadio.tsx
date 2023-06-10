@@ -24,21 +24,19 @@ export default function TypeRadio() {
   return (
     <div
       className="
-    desktop:mt-1 desktop:flex gap-1 desktop:h-[100px] desktop:items-center
+    desktop:mt-1 desktop:flex gap-2 desktop:h-[45px] desktop:items-center
     mobile:w-full w-full mobile:m-0 mobile:grid mobile:grid-cols-4 mobile:p-2"
     >
       {radioes?.map((radio: RadioType) => {
-        console.log(radio);
-        console.log(type.includes(radio.name));
         return (
           <button
             key={radio.name}
             id={radio.name}
             onClick={handleClick}
             className="
-            desktop:w-20 mobile:w-20 h-8 rounded-md 
+            desktop:w-auto mobile:w-20 h-8 rounded-md 
             text-sm text-center text-white cursor-pointer 
-            px-3 py-1 mobile:m-auto"
+            px-3 py-1 desktop:m-0 mobile:m-auto"
             style={{
               backgroundColor: `${
                 !type.includes(radio.name) ? radio.color : "#eaeaea"

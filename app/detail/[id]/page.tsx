@@ -103,7 +103,7 @@ const Detail = ({ params }: paramType) => {
             <span
               className="
               desktop:absolute desktop:bottom-28 desktop:top-36 desktop:left-2 
-              mobile:text-black mobile:absolute mobile:left-0 mobile:top-0
+              mobile:text-white mobile:absolute mobile:left-0 mobile:top-0
               font-extrabold text-2xl mobile:z-0 z-20 h-auto mt-2"
             >
               {data.id < 10

@@ -1,23 +1,33 @@
 /** @format */
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useQuery } from "react-query";
 import Image from "next/image";
 import Link from "next/link";
 import Badge from "../components/Badge";
-import Loading from "./loading";
+import Loading from "../components/loading";
 
 const fetchSearchResults = async (searchTerm: any) => {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json; charset=UTF-8");
+
   if (searchTerm === "") {
     return [];
   }
   try {
     const encodedSearchTerm = encodeURIComponent(searchTerm);
-    const response = await axios.get(`/api/getSearch?q=${encodedSearchTerm}`);
-    return response.data;
+    const response = await fetch(`/api/getSearch?q=${encodedSearchTerm}`, {
+      method: "post",
+      headers: headers,
+      cache: "no-store",
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return data;
   } catch (e) {
-    console.log(e);
+    console.error("Network error:", e);
   }
 };
 
@@ -43,16 +53,23 @@ export default function Page() {
     return <div>Error occurred while fetching data</div>;
   }
 
-  console.log(filtered);
   return (
-    <div className="w-screen h-[90vh] relative top-24">
-      <div className="w-full h-full desktop:p-10 tablet:p-8 mobile:p-5">
+    <div className="w-screen relative top-28">
+      <div className="w-full desktop:p-10 tablet:p-8 mobile:p-5">
         <h1 className="text-3xl font-extrabold">
           {"'" + searchTerm + "'"} 검색 결과
         </h1>
-        <div className="grid desktop:grid-cols-8 mobile:mt-3 mt-20 gap-3 mobile:grid-cols-2">
+        <div
+          className={`${
+            !isLoading
+              ? "grid"
+              : "flex justify-center items-center w-full mobile:h-[40%] desktop:h-auto"
+          } desktop:grid-cols-8 mobile:mt-3 mt-20 gap-3 mobile:grid-cols-2`}
+        >
           {isLoading ? (
-            <Loading />
+            <div className="w-full h-auto">
+              <Loading />
+            </div>
           ) : filtered ? (
             filtered?.map((poke: any) => (
               <Link key={poke.name} href={`/detail/${poke.id}`}>
@@ -69,7 +86,7 @@ export default function Page() {
                       {poke.name}
                     </span>
                     <div className="flex flex-row justify-center items-center m-auto">
-                      {poke.types.map((type: any) => (
+                      {poke.types?.map((type: any) => (
                         <div key={type}>
                           <Badge name={type} />
                         </div>

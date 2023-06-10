@@ -3,16 +3,18 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const variants = {
-  open: { scale: 1.2 },
+  open: { scale: 5.9 },
   closed: { scale: 0.6 },
 };
 
 const Entrance: React.FC = () => {
   const [isSpin, setIsSpin] = useState(false);
   const router = useRouter();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSpin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -36,7 +38,12 @@ const Entrance: React.FC = () => {
 
       <button onClick={handleSpin} type="button">
         <AnimatePresence>
-          <div className="">
+          <motion.div
+            animate={isOpen ? "open" : "closed"}
+            variants={variants}
+            className="bg-white rounded-full w-36 h-36"
+            onClick={() => setIsOpen(prev => !prev)}
+          >
             <Image
               src={
                 "https://raw.githubusercontent.com/ahampriyanshu/gokemon/master/assets/img/pokeball.png"
@@ -44,9 +51,9 @@ const Entrance: React.FC = () => {
               width={150}
               height={150}
               alt="pokemon ball"
-              className="shadow-2xl rounded-full"
+              className="shadow-2xl rounded-full bg-white"
             />
-          </div>
+          </motion.div>
         </AnimatePresence>
       </button>
     </div>

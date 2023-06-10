@@ -9,6 +9,21 @@ export type BadgeTypes = {
     color: string;
   };
 };
+///Result
+
+export interface pokeProps {
+  name: string;
+  url: string;
+}
+
+export interface SearchResult {
+  id: number;
+  name: string;
+  engName: string;
+  jpnName: string;
+  image: string;
+  types: string[];
+}
 
 /// Detail
 export interface DetailType {

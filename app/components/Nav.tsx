@@ -6,27 +6,23 @@ import Link from "next/link";
 import { FcSearch } from "react-icons/fc";
 import { useRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "react-query";
 import axios from "axios";
 import mobileState from "../store/mobileAtom";
 
 const fetchSearchResults = async (searchTerm: any) => {
   const encodedSearchTerm = encodeURIComponent(searchTerm);
-  console.log(encodedSearchTerm);
   const response = await axios.get(`/api/getSearch?q=${encodedSearchTerm}`);
   return response.data;
 };
 
 function Nav() {
   const [text, setText] = useState<string>("");
-  const queryClient = useQueryClient();
   const router = useRouter();
   const [mobile, setMobile] = useRecoilState(mobileState);
-  console.log(text);
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!text) return null;
-    queryClient.prefetchQuery("search", () => fetchSearchResults(text));
     const encoded = encodeURIComponent(text);
     router.push(`/search?q=${encoded}`);
   };
@@ -52,7 +48,6 @@ function Nav() {
         />
       </Link>
       <form
-        action={`/api/getSearch?q=${text}`}
         className="flex desktop:m-auto rounded-sm mobile:mx-10"
         onSubmit={handleSubmit}
       >

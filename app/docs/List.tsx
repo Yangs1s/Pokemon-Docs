@@ -10,6 +10,7 @@ import { useInfiniteQuery } from "react-query";
 import Badge from "../components/Badge";
 import { useRecoilState } from "recoil";
 import filterListState from "../store/filterAtom";
+import Loading from "../components/loading";
 
 interface ResultType {
   id: number;
@@ -31,6 +32,7 @@ interface pagesProps {
 }
 
 const MAX_POKE = 1118 as number;
+
 export default function List() {
   const [ref, inView] = useInView();
   const [pokemons, setPokemons] = useState<any>([]);
@@ -144,9 +146,9 @@ export default function List() {
       {/* 인피니티 스크롤 로딩바*/}
       <div
         ref={ref}
-        className=" p-3 flex justify-center items-center m-auto bg-slate-100 h-32"
+        className=" p-3 flex justify-center items-center m-auto h-32"
       >
-        <span className="text-xl">불러오는중입니다....!</span>
+        <span className="text-xl">{/* <Loading /> */}</span>
       </div>
     </div>
   );

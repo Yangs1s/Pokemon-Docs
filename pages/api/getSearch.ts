@@ -1,35 +1,48 @@
 /** @format */
-import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
+import { pokeProps, SearchResult } from "@/app/constants";
+
+async function fetchResult(url: string) {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json; charset=UTF-8");
+
+  const result = await fetch(url, {
+    method: "get",
+    headers: headers,
+  }).then(res => res.json());
+
+  return result;
+}
 
 export default async function getSearchResult(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { q }: any = req.query;
-  const decodedQ = decodeURIComponent(q);
-
-  console.log(decodedQ);
   try {
-    const result = await axios.get(
-      `https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0/`
+    const { q }: any = req.query;
+    const decodedQ = decodeURIComponent(q);
+
+    const response = await fetchResult(
+      "https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0"
     );
 
-    const response = result.data;
-
     const pokemonList = response.results;
-
+    /// 검색결과에 띄어줄 데이터들
     const searchResult = await Promise.all(
-      pokemonList.map(async (poke: any) => {
-        const result = await axios.get(poke.url);
-        const data = result.data;
+      pokemonList.map(async (poke: pokeProps) => {
+        const result = await fetch(poke.url, { method: "get" }).then(res =>
+          res.json()
+        );
+        const data = result;
         const types = data.types.map((li: any) => li.type.name);
 
         const koNameUrl = data.species.url;
-        const resultkoName = await axios.get(koNameUrl);
+        const resultkoName = await fetch(koNameUrl, { method: "get" }).then(
+          name => name.json()
+        );
 
-        const nameData = resultkoName.data;
-        const koName = nameData.names.map((name: any) => {
+        const nameData = resultkoName;
+        const koName: string = nameData.names.map((name: any) => {
           return name.name;
         });
 
@@ -44,14 +57,14 @@ export default async function getSearchResult(
       })
     );
 
-    const filtered = searchResult?.filter((poke: any) => {
+    ///검색기능
+    const filtered = searchResult?.filter((poke: SearchResult) => {
       if (poke.name.includes(decodedQ)) {
         return true;
       }
       return false;
     });
 
-    console.log(filtered);
     res.status(200).json(filtered);
   } catch (e) {
     console.log(e);

@@ -82,12 +82,12 @@ export const Radio: RadioType[] = [
   },
 
   {
-    name: "Fairy",
+    name: "fairy",
     ko_name: "페어리",
     color: "#EE99AC",
   },
   {
-    name: "Psychic",
+    name: "psychic",
     ko_name: "에스퍼",
     color: "#F85888",
   },
